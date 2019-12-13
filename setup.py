@@ -57,9 +57,16 @@ modules = [
     'pyfr.solvers.euler.kernels',
     'pyfr.solvers.euler.kernels.bcs',
     'pyfr.solvers.euler.kernels.rsolvers',
+    'pyfr.solvers.eulerReacting',             
+    'pyfr.solvers.eulerReacting.kernels',
+    'pyfr.solvers.eulerReacting.kernels.bcs',
+    'pyfr.solvers.eulerReacting.kernels.rsolvers', 
     'pyfr.solvers.navstokes',
     'pyfr.solvers.navstokes.kernels',
     'pyfr.solvers.navstokes.kernels.bcs',
+    'pyfr.solvers.navstokesReacting',
+    'pyfr.solvers.navstokesReacting.kernels',
+    'pyfr.solvers.navstokesReacting.kernels.bcs',
     'pyfr.writers'
 ]
 
@@ -94,8 +101,13 @@ package_data = {
     'pyfr.solvers.euler.kernels': ['*.mako'],
     'pyfr.solvers.euler.kernels.bcs': ['*.mako'],
     'pyfr.solvers.euler.kernels.rsolvers': ['*.mako'],
+    'pyfr.solvers.eulerReacting.kernels': ['*.mako'],
+    'pyfr.solvers.eulerReacting.kernels.bcs': ['*.mako'],
+    'pyfr.solvers.eulerReacting.kernels.rsolvers': ['*.mako'],
     'pyfr.solvers.navstokes.kernels': ['*.mako'],
     'pyfr.solvers.navstokes.kernels.bcs': ['*.mako'],
+    'pyfr.solvers.navstokesReacting.kernels': ['*.mako'],
+    'pyfr.solvers.navstokesReacting.kernels.bcs': ['*.mako'],
     'pyfr.tests': ['*.npz']
 }
 
