@@ -139,8 +139,8 @@ class BaseFluidReactingElements(object):
 
 
 class EulerReactingElements(BaseFluidReactingElements, BaseAdvectionElements):
-    def set_backend(self, backend, nscalupts, nonce):
-        super().set_backend(backend, nscalupts, nonce)
+    def set_backend(self, *args, **kwargs):
+        super().set_backend(*args, **kwargs)
 
         # Register our flux kernel
         backend.pointwise.register('pyfr.solvers.eulerReacting.kernels.tflux')

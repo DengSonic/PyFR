@@ -3,7 +3,7 @@
 
 <% N = int(c['component']) %>
 
-<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur, ploc, t'>
+<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur' externs='ploc, t'>
     ur[0] = ${c['rho']};
   //  ur[0] = 1.813122272491455;
 

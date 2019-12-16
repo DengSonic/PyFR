@@ -8,7 +8,7 @@
 
 <% N = int(c['component']) %>
 
-<%pyfr:macro name='bc_ldg_state' params='ul, nl, ur, ploc, t'>
+<%pyfr:macro name='bc_ldg_state' params='ul, nl, ur'>
     fpdtype_t nor = ${' + '.join('ul[{1}]*nl[{0}]'.format(i, i + 1)
                                  for i in range(ndims))};
     ur[0] = ul[0];
@@ -25,10 +25,10 @@
 //    ur[${nvars - 2}] = ul[${nvars - 2}];
 </%pyfr:macro>
 
-<%pyfr:macro name='bc_common_flux_state' params='ul, gradul, artviscl, nl, magnl, ploc, t'>
+<%pyfr:macro name='bc_common_flux_state' params='ul, gradul, artviscl, nl, magnl'>
     // Ghost state r
     fpdtype_t ur[${nvars}];
-    ${pyfr.expand('bc_ldg_state', 'ul', 'nl', 'ur', 'ploc', 't')};
+    ${pyfr.expand('bc_ldg_state', 'ul', 'nl', 'ur')};
 
     // Perform the Riemann solve
     fpdtype_t ficomm[${nvars}];

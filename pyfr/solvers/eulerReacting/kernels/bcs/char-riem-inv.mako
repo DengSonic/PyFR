@@ -5,7 +5,7 @@
 <% gamma = c['gamma'] %>
 <% N = int(c['component']) %>
 
-<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur, ploc, t'>
+<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur' externs='ploc, t'>
     fpdtype_t cs = sqrt(${gamma}*${c['p']}/${c['rho']});
     fpdtype_t s = ${c['p']}*pow(${c['rho']}, -${gamma});
     fpdtype_t ratio = cs*${2.0/gmo};

@@ -4,7 +4,7 @@
    //7, 11
 <% N = int(c['component']) %>
 
-<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur, ploc, t'>
+<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur' externs='ploc, t'>
     ur[0] = ul[0];
    // ur[${nvars - 1}] = ul[${nvars - 1}];
 
@@ -19,7 +19,7 @@
                      + 0.5*(1.0/ur[0])*${pyfr.dot('ur[{i}]', i=(1, ndims + 1))};
 </%pyfr:macro>
 
-<%pyfr:macro name='bc_ldg_state' params='ul, nl, ur, ploc, t'>
+<%pyfr:macro name='bc_ldg_state' params='ul, nl, ur' externs='ploc, t'>
     ur[0] = ul[0];
    // ur[${nvars - 1}] = ul[${nvars - 1}];
 
