@@ -8,6 +8,8 @@
 
 <% beta, tau = c['ldg-beta'], c['ldg-tau'] %>
 
+<% avType = c['avType'] %>
+
 <%pyfr:kernel name='intcflux' ndim='1'
               ul='inout view fpdtype_t[${str(nvars)}]'
               ur='inout view fpdtype_t[${str(nvars)}]'
@@ -21,16 +23,32 @@
     fpdtype_t ficomm[${nvars}], fvcomm;
     ${pyfr.expand('rsolve', 'ul', 'ur', 'nl', 'ficomm')};
 
+    fpdtype_t avL,avR;
+
+% if avType == 0.0:
+     avL=artviscl;
+     avR=artviscr;
+% elif avType == 1.0:
+     avL=0.5*(artviscl+artviscr);
+     avR=0.5*(artviscl+artviscr);
+% elif avType == 2.0:
+     avL=0.0;
+     avR=0.0;
+% else:
+     avL=max(artviscl,artviscr);
+     avR=max(artviscl,artviscr);        
+% endif
+
 % if beta != -0.5:
     fpdtype_t fvl[${ndims}][${nvars}] = {{0}};
     ${pyfr.expand('viscous_flux_add', 'ul', 'gradul', 'fvl')};
-    ${pyfr.expand('artificial_viscosity_add', 'gradul', 'fvl', 'artviscl')};
+    ${pyfr.expand('artificial_viscosity_add', 'gradul', 'fvl', 'avL')};
 % endif
 
 % if beta != 0.5:
     fpdtype_t fvr[${ndims}][${nvars}] = {{0}};
     ${pyfr.expand('viscous_flux_add', 'ur', 'gradur', 'fvr')};
-    ${pyfr.expand('artificial_viscosity_add', 'gradur', 'fvr', 'artviscr')};
+    ${pyfr.expand('artificial_viscosity_add', 'gradur', 'fvr', 'avR')};
 % endif
 
 % for i in range(nvars):

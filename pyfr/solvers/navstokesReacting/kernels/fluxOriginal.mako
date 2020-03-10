@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 <%namespace module='pyfr.backends.base.makoutil' name='pyfr'/>
 
-<% N = int(c['component']) %>
-
 % if ndims == 2:
 <%pyfr:macro name='viscous_flux_add' params='uin, grad_uin, fout'>
-
-    // correct sum rho later
-
     fpdtype_t rho = uin[0], rhou = uin[1], rhov = uin[2], E = uin[3];
 
     fpdtype_t rcprho = 1.0/rho;
@@ -49,90 +44,6 @@
 
     fout[0][3] += u*t_xx + v*t_xy + -mu_c*${c['gamma']/c['Pr']}*T_x;
     fout[1][3] += u*t_xy + v*t_yy + -mu_c*${c['gamma']/c['Pr']}*T_y;
-
-
-    fpdtype_t Y[${N}];
-% for i in range(N):
-    Y[${i}] = rcprho*uin[${4+i}];
-% endfor  
-
-    //mass fraction derivatives
-    fpdtype_t Y_x[${N}];
-    fpdtype_t Y_y[${N}];
-
-% for i in range(N):
-    Y_x[${i}] = rcprho*(grad_uin[0][${4+i}]-Y[${i}]*rho_x);
-    Y_y[${i}] = rcprho*(grad_uin[1][${4+i}]-Y[${i}]*rho_y);
-% endfor     
-
-    fpdtype_t D[${N}];
-% for i in range(N):
-    D[${i}] = ${c['D'+str(i)]};
-% endfor
-
-    fpdtype_t sumDY_x = 0.0;
-    fpdtype_t sumDY_y = 0.0;
-
-% for i in range(N):
-    sumDY_x = sumDY_x+D[${i}]*Y_x[${i}];
-    sumDY_y = sumDY_y+D[${i}]*Y_y[${i}];
-% endfor
-
-    fpdtype_t rhoYV_x[${N}];
-    fpdtype_t rhoYV_y[${N}];
-
-% for i in range(N):
-    rhoYV_x[${i}] = -rho*D[${i}]*Y_x[${i}]+rho*Y[${i}]*sumDY_x;
-    rhoYV_y[${i}] = -rho*D[${i}]*Y_y[${i}]+rho*Y[${i}]*sumDY_y;
-% endfor 
-
-    //+,- 
-% for i in range(N):
-    fout[0][${4+i}] += rhoYV_x[${i}];
-    fout[1][${4+i}] += rhoYV_y[${i}];
-% endfor 
-
-    //correct energy equation due to diffusion
-    fpdtype_t R= ${c['Rgas']};
-
-    fpdtype_t Cp[${N}];
-    fpdtype_t Wmol[${N}];
-    fpdtype_t E_ref[${N}];
-% for i in range(N):
-    Cp[${i}] = ${c['Cp'+str(i)]};
-    Wmol[${i}] = ${c['Wmol'+str(i)]};
-    E_ref[${i}] = ${c['E_ref'+str(i)]};
-% endfor
-
-    fpdtype_t CpBar = 0.0;
-    fpdtype_t RBar = 0.0;
-    fpdtype_t E_refBar = 0.0;
-% for i in range(N):
-    CpBar = CpBar + max(Y[${i}],1.0e-8)*Cp[${i}];
-    RBar = RBar + R*(max(Y[${i}],1.0e-8)/Wmol[${i}]);
-    E_refBar = E_refBar + max(Y[${i}],1.0e-8)*E_ref[${i}];
-% endfor
-
-    fpdtype_t gamma = CpBar/(CpBar-RBar);
-
-    fpdtype_t p = (gamma - 1)*((E - 0.5*rho*(u*u + v*v))-(rho*E_refBar));
-
-    fpdtype_t T =p/rho/RBar;
-
-
-    fpdtype_t sumEc_x = 0.0;
-    fpdtype_t sumEc_y = 0.0;
-    //(E_ref[${i}]+Cp[${i}]*T)
-% for i in range(N):
-    sumEc_x = sumEc_x+rhoYV_x[${i}]*(E_ref[${i}]);
-    sumEc_y = sumEc_y+rhoYV_y[${i}]*(E_ref[${i}]);
-  //  sumEc_x = sumEc_x+rhoYV_x[${i}]*(E_ref[${i}]+Cp[${i}]*T);
-  //  sumEc_y = sumEc_y+rhoYV_y[${i}]*(E_ref[${i}]+Cp[${i}]*T);
-% endfor
-
-    fout[0][3] += sumEc_x;
-    fout[1][3] += sumEc_y;
-
 </%pyfr:macro>
 % elif ndims == 3:
 <%pyfr:macro name='viscous_flux_add' params='uin, grad_uin, fout'>
